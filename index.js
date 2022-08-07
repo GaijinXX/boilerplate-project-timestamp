@@ -24,10 +24,19 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get("/api", function (req, res) {
+  let time = new Date();
+  res.json({ "unix": time.getTime(), "utc": time.toGMTString() });
+});
+
 app.get("/api/:time", function (req, res) {
-  let time = new Date(req.params.time);
+  let param = req.params.time;
+  let time = new Date(param);
   if(!time.valueOf()) {
-    time.setTime(req.params.time);
+    time.setTime(param);
+    if(!time.valueOf()) {
+      res.json({ error : "Invalid Date" });
+    }
   }
   res.json({ "unix": time.getTime(), "utc": time.toGMTString() });
 });
